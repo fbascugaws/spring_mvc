@@ -1,5 +1,7 @@
 package com.spring.spring_mvc.controller;
 
+import com.spring.spring_mvc.entity.StudentErrorResponse;
+import com.spring.spring_mvc.exception.StudentNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.http.HttpStatus;
@@ -7,9 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-
-import com.spring.spring_mvc.entity.StudentErrorResponse;
-import com.spring.spring_mvc.exception.StudentNotFoundException;
 
 /**
  * StudentExceptionHandler

@@ -1,8 +1,7 @@
 package com.spring.spring_mvc.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-
 import com.spring.spring_mvc.entity.Student;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
  * StudentRepository

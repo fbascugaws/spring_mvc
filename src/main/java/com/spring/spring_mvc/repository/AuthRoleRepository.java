@@ -1,9 +1,8 @@
 package com.spring.spring_mvc.repository;
 
+import com.spring.spring_mvc.entity.Auth_Role;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import com.spring.spring_mvc.entity.Auth_Role;
 
 /**
  * AuthRoleRepository
