@@ -195,3 +195,33 @@ async function loginUser(loginDto) {
         console.error("Login error:", error);        
     }    
 }
+
+// user logout
+async function logoutUser() {
+    try {
+        await fetch(`${API_AUTH}/logout`, {
+            method: "POST",
+            credentials: "include"
+        });
+        document.getElementById("studentTableBody").innerHTML = "";
+        resetForm();
+        alert("Logged out successfully!");
+
+        try {
+            await fetch(API_URL, {
+                method: "GET",
+                headers: {
+                    "Authorization": "Basic " + btoa("invalid_user:wrong_password")
+                }
+            });
+
+        } catch (err) {
+            console.log("Browser credential cache cleared.");            
+        }
+
+        window.location.reload();
+
+    } catch (error) {
+        console.error("Logout transmission crash:", error);        
+    }    
+}
