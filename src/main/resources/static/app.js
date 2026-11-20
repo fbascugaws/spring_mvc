@@ -13,6 +13,7 @@ async function createStudent(studentData) {
         if (response.ok) {
             alert("Student added successfully!");
             resetForm();
+            getAllStudents();
         } else {
             alert("Error adding student.");
         } 
@@ -37,7 +38,11 @@ document.getElementById("studentForm").addEventListener("submit", function(e) {
         email: document.getElementById("email").value.trim()
     };
 
-    createStudent(studentData);
+    if (id) {
+        updateStudent(id, studentData);
+    } else {
+        createStudent(studentData);
+    }
     
 });
 
@@ -64,14 +69,14 @@ async function getAllStudents() {
         students.forEach(student => {
             const row = `
                 <tr>
-                    <td>${student.id}</d>
-                    <td>${student.firstName}</d>
-                    <td>${student.lastName}</d>
-                    <td>${student.email}</d>
+                    <td>${student.id}</td>
+                    <td>${student.firstName}</td>
+                    <td>${student.lastName}</td>
+                    <td>${student.email}</td>
                     <td>
-                        <button class="btn-edit" onclick="initializesStudentFormById(${student.id})">Edit</button>
+                        <button class="btn-edit" onclick="initializeStudentFormById(${student.id})">Edit</button>
                         <button class="btn-delete" onclick="deleteStudent(${student.id})">Delete</button>
-                    </d>
+                    </td>
                 </tr>
             `;
             tableBody.innerHTML += row;
@@ -84,3 +89,51 @@ async function getAllStudents() {
 
 // event listener to load data from springboot
 document.addEventListener("DOMContentLoaded", getAllStudents);
+
+// display initial values of student form when edit btn is clicked
+async function initializeStudentFormById(id) {
+    try {
+        const response = await fetch(`${API_URL}/${id}`);
+        if (!response.ok) throw new Error("Could not fetch student details");
+
+        const student = await response.json();
+
+        document.getElementById("studentId").value = student.id;
+        document.getElementById("firstName").value = student.firstName;
+        document.getElementById("lastName").value = student.lastName;
+        document.getElementById("email").value = student.email;
+
+        // button changes when edit button is triggered
+        const submitBtn = document.getElementById("submitBtn");
+        submitBtn.textContent = "Update";
+        submitBtn.style.backgroundColor = "#007bff";
+
+        // clear old error highlights
+        clearValidationStyles();
+
+    } catch (error) {
+        console.error("Error fetching student details: ", error);        
+    }
+}
+
+
+async function updateStudent(id, studentData) {
+    try {
+        const response = await fetch(`${API_URL}/${id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(studentData)
+        });
+
+        if (response.ok) {
+            alert("Student updated successfully!");
+            resetForm();
+            getAllStudents();
+        } else {
+            alert("Error updating student.");
+        }
+
+    } catch (error) {
+        console.error("Error updating student: ", error);        
+    }
+}
