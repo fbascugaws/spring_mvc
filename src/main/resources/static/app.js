@@ -1,5 +1,6 @@
 // stores springboot base endpoint
 const API_URL = "http://localhost:8080/api/students";
+const API_AUTH = "http://localhost:8080/api/auth";
 
 // create a student
 async function createStudent(studentData) {
@@ -7,7 +8,8 @@ async function createStudent(studentData) {
         const response = await fetch(API_URL, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(studentData)
+            body: JSON.stringify(studentData),
+            credentials: "include"
         });
 
         if (response.ok) {
@@ -18,7 +20,7 @@ async function createStudent(studentData) {
             alert("Error adding student.");
         } 
     } catch (error) {
-        console.error("Error creating student: ", error);
+        console.error("Error creating student:", error);
     }
 }
 
@@ -59,7 +61,15 @@ function resetForm() {
 // display all db data
 async function getAllStudents() {
     try {
-        const response = await fetch(API_URL);
+        const response = await fetch(API_URL, {
+            credentials: "include"
+        });
+        
+        if (response.status === 401 || response.status === 403) {
+            await loginUser();
+            return;
+        }
+
         if (!response.ok) throw new Error("Network response was not ok");
 
         const students = await response.json();
@@ -82,7 +92,7 @@ async function getAllStudents() {
             tableBody.innerHTML += row;
         });
     } catch (error) {
-        console.error("Error fetching students: ", error);
+        console.error("Error fetching students:", error);
         alert("Failed to fetch students. Is your Spring Boot backend running?");        
     }
 }
@@ -93,7 +103,9 @@ document.addEventListener("DOMContentLoaded", getAllStudents);
 // display initial values of student form when edit btn is clicked
 async function initializeStudentFormById(id) {
     try {
-        const response = await fetch(`${API_URL}/${id}`);
+        const response = await fetch(`${API_URL}/${id}`, {
+            credentials: "include"
+        });
         if (!response.ok) throw new Error("Could not fetch student details");
 
         const student = await response.json();
@@ -112,7 +124,7 @@ async function initializeStudentFormById(id) {
         clearValidationStyles();
 
     } catch (error) {
-        console.error("Error fetching student details: ", error);        
+        console.error("Error fetching student details:", error);        
     }
 }
 
@@ -122,7 +134,8 @@ async function updateStudent(id, studentData) {
         const response = await fetch(`${API_URL}/${id}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(studentData)
+            body: JSON.stringify(studentData),
+            credentials: "include"
         });
 
         if (response.ok) {
@@ -134,7 +147,7 @@ async function updateStudent(id, studentData) {
         }
 
     } catch (error) {
-        console.error("Error updating student: ", error);        
+        console.error("Error updating student:", error);        
     }
 }
 
@@ -143,7 +156,8 @@ async function deleteStudent(id) {
     if (confirm("Are you sure you want to delete this student?")) {
         try {
             const response = await fetch(`${API_URL}/${id}`, {
-                method: "DELETE"
+                method: "DELETE",
+                credentials: "include"
             });
 
             if (response.ok) {
@@ -155,7 +169,29 @@ async function deleteStudent(id) {
             }
 
         } catch (error) {
-            console.error("Error deleting student: ", error);     
+            console.error("Error deleting student:", error);     
         }
     }
+}
+
+// login a user
+async function loginUser(loginDto) {
+    try {
+        const response = await fetch(`${API_AUTH}/auth_login_session`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(loginDto),
+            credentials: "include"
+        });
+
+        if (response.ok) {
+            alert("Login successful!");
+            window.location.href = "index.html";
+        } else {
+            alert("Invalid credentials.");
+        }
+
+    } catch (error) {
+        console.error("Login error:", error);        
+    }    
 }
