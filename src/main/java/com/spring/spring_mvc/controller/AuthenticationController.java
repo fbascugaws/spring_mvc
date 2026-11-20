@@ -143,10 +143,12 @@ public class AuthenticationController {
     }
 
     /**
-     * TODO jdocs
-     * @param authLoginDto
-     * @param request
-     * @return
+     * Authenticates a user and creates a stateful HTTP session.
+     *
+     * @param authLoginDto DTO containing the user's login credentials
+     * @param request      the HTTP request used to initialize the session
+     * @return a {@link ResponseEntity} ({@code 200 OK}) with a success message
+     * @throws AuthenticationException if user credentials are invalid
      */
     @PostMapping("/auth_login_session")
     public ResponseEntity<?> loginWithSession(@RequestBody 
@@ -169,9 +171,11 @@ public class AuthenticationController {
     }
     
     /**
-     * TODO 
-     * @param request
-     * @return
+     * Invalidates the current HTTP session and clears the security context.
+     *
+     * @param request the HTTP request used to fetch the active session
+     * @return a {@link ResponseEntity} ({@code 401 Unauthorized}) confirming
+     *         logout
      */
     @PostMapping("/logout")
     public ResponseEntity<String> logout(HttpServletRequest request) {

@@ -1,8 +1,25 @@
-// stores springboot base endpoint
+/**
+ * Base URL for student CRUD API endpoints.
+ * @type {string}
+ */
 const API_URL = "http://localhost:8080/api/students";
+
+/**
+ * Base URL for authentication API endpoints.
+ * @type {string}
+ */
 const API_AUTH = "http://localhost:8080/api/auth";
 
-// create a student
+/**
+ * Sends a POST request to create a new student record.
+ * Resets the form and refreshes the student table upon success.
+ *
+ * @param {Object} studentData - The student payload.
+ * @param {string} studentData.firstName - Student's first name.
+ * @param {string} studentData.lastName - Student's last name.
+ * @param {string} studentData.email - Student's email address.
+ * @returns {Promise<void>}
+ */
 async function createStudent(studentData) {
     try {
         const response = await fetch(API_URL, {
@@ -24,7 +41,13 @@ async function createStudent(studentData) {
     }
 }
 
-// event listener for form submission
+/**
+ * Handles student form submission by preventing default reload, validating
+ * inputs, and routing to either create or update based on studentId presence.
+ *
+ * @param {SubmitEvent} e - The form submission event.
+ * @listens HTMLFormElement#submit
+ */
 document.getElementById("studentForm").addEventListener("submit", function(e) {
 
     e.preventDefault();
@@ -48,7 +71,10 @@ document.getElementById("studentForm").addEventListener("submit", function(e) {
     
 });
 
-// resert form state
+/**
+ * Resets the student form fields and restores the submit button
+ * to its default "Add Student" state.
+ */
 function resetForm() {
     document.getElementById("studentId").value = "";
     document.getElementById("studentForm").reset();
@@ -58,7 +84,12 @@ function resetForm() {
     submitBtn.style.backgroundColor = "#28a745";
 }
 
-// display all db data
+/**
+ * Fetches all student records from the backend and populates the HTML table.
+ * Triggers login flow if the session is unauthorized (401/403).
+ *
+ * @returns {Promise<void>}
+ */
 async function getAllStudents() {
     try {
         const response = await fetch(API_URL, {
@@ -84,8 +115,14 @@ async function getAllStudents() {
                     <td>${student.lastName}</td>
                     <td>${student.email}</td>
                     <td>
-                        <button class="btn-edit" onclick="initializeStudentFormById(${student.id})">Edit</button>
-                        <button class="btn-delete" onclick="deleteStudent(${student.id})">Delete</button>
+                        <button class="btn-edit" 
+                            onclick="initializeStudentFormById(${student.id})">
+                                Edit
+                        </button>
+                        <button class="btn-delete" 
+                            onclick="deleteStudent(${student.id})">
+                                Delete
+                        </button>
                     </td>
                 </tr>
             `;
@@ -93,14 +130,26 @@ async function getAllStudents() {
         });
     } catch (error) {
         console.error("Error fetching students:", error);
-        alert("Failed to fetch students. Is your Spring Boot backend running?");        
+        alert(
+            "Failed to fetch students. Is your Spring Boot backend running?");
     }
 }
 
-// event listener to load data from springboot
+/**
+ * Initializes the student table by fetching all student records once the
+ * initial HTML document has completely loaded and parsed.
+ *
+ * @listens Document#DOMContentLoaded
+ */
 document.addEventListener("DOMContentLoaded", getAllStudents);
 
-// display initial values of student form when edit btn is clicked
+/**
+ * Fetches a student's details by ID and populates the form for editing.
+ * Switches the submit button to "Update" mode.
+ *
+ * @param {number|string} id - The unique ID of the student to edit.
+ * @returns {Promise<void>}
+ */
 async function initializeStudentFormById(id) {
     try {
         const response = await fetch(`${API_URL}/${id}`, {
@@ -128,7 +177,17 @@ async function initializeStudentFormById(id) {
     }
 }
 
-// update a student
+/**
+ * Sends a PUT request to update an existing student record.
+ * Resets the form and refreshes the student table upon success.
+ *
+ * @param {number|string} id - The unique ID of the student to update.
+ * @param {Object} studentData - The updated student details.
+ * @param {string} studentData.firstName - Student's first name.
+ * @param {string} studentData.lastName - Student's last name.
+ * @param {string} studentData.email - Student's email address.
+ * @returns {Promise<void>}
+ */
 async function updateStudent(id, studentData) {
     try {
         const response = await fetch(`${API_URL}/${id}`, {
@@ -151,7 +210,13 @@ async function updateStudent(id, studentData) {
     }
 }
 
-// delete a student
+/**
+ * Prompts for confirmation and sends a DELETE request to remove a student.
+ * Refreshes the student table upon success.
+ *
+ * @param {number|string} id - The unique ID of the student to delete.
+ * @returns {Promise<void>}
+ */
 async function deleteStudent(id) {
     if (confirm("Are you sure you want to delete this student?")) {
         try {
@@ -174,7 +239,15 @@ async function deleteStudent(id) {
     }
 }
 
-// login a user
+/**
+ * Authenticates a user via session cookie and redirects to index.html 
+ * on success.
+ *
+ * @param {Object} loginDto - The user's login credentials.
+ * @param {string} loginDto.username - Account username.
+ * @param {string} loginDto.password - Account password.
+ * @returns {Promise<void>}
+ */
 async function loginUser(loginDto) {
     try {
         const response = await fetch(`${API_AUTH}/auth_login_session`, {
@@ -196,7 +269,12 @@ async function loginUser(loginDto) {
     }    
 }
 
-// user logout
+/**
+ * Terminates the active user session, clears UI data and cached browser
+ * credentials, and reloads the page.
+ *
+ * @returns {Promise<void>}
+ */
 async function logoutUser() {
     try {
         await fetch(`${API_AUTH}/logout`, {
@@ -211,7 +289,8 @@ async function logoutUser() {
             await fetch(API_URL, {
                 method: "GET",
                 headers: {
-                    "Authorization": "Basic " + btoa("invalid_user:wrong_password")
+                    "Authorization": "Basic " 
+                        + btoa("invalid_user:wrong_password")
                 }
             });
 

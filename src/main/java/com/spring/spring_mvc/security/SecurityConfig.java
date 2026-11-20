@@ -107,8 +107,10 @@ public class SecurityConfig {
     }
     
     /**
-     * TODO jdocs
-     * @return
+     * Configures CORS policies for the application's endpoints.
+     *
+     * @return the configured {@link CorsConfigurationSource} allowing
+     *         specified origins, methods, headers, and credentials
      */
     @Bean 
     CorsConfigurationSource corsConfigurationSource() {

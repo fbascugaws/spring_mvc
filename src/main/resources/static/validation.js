@@ -1,3 +1,9 @@
+/**
+ * Validates the student form fields (first name, last name, and email).
+ * Displays inline error messages and applies invalid styling on failure.
+ *
+ * @returns {boolean} True if all form fields pass validation; otherwise false.
+ */
 function validateStudentForm() {
     let isValid = true;
 
@@ -11,29 +17,31 @@ function validateStudentForm() {
 
     clearValidationStyles();
 
-    // first name
+    // First Name Validation
     if (firstName.value.trim() === "") {
         firstNameError.textContent = "First name is required.";
         firstName.classList.add("invalid");
         isValid = false;
     } else if (firstName.value.trim().length < 2) {
-        firstNameError.textContent = "First name must be at least 2 characters long.";
+        firstNameError.textContent 
+            = "First name must be at least 2 characters long.";
         firstName.classList.add("invalid");
         isValid = false;
     }
 
-    // last name
+    // Last Name Validation
     if (lastName.value.trim() === "") {
         lastNameError.textContent = "Last name is required.";
         lastName.classList.add("invalid");
         isValid = false;
     } else if (lastName.value.trim().length < 2) {
-        lastNameError.textContent = "Last name must be at least 2 characters long.";
+        lastNameError.textContent 
+            = "Last name must be at least 2 characters long.";
         lastName.classList.add("invalid");
         isValid = false;
     }
 
-    // email
+    // Email Validation
     const emailValue = email.value.trim();
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
@@ -42,7 +50,8 @@ function validateStudentForm() {
         email.classList.add("invalid");
         isValid = false;
     } else if (!emailRegex.test(emailValue)) {
-        emailError.textContent = "Please enter a valid email address (e.g., student@example.com).";
+        emailError.textContent 
+            = "Please enter a valid email address (e.g., name@example.com).";
         email.classList.add("invalid");
         isValid = false;
     }
@@ -50,7 +59,9 @@ function validateStudentForm() {
     return isValid;
 }
 
-// reset form by clearing out previous validation checks
+/**
+ * Resets form fields by removing invalid CSS classes and clearing error text.
+ */
 function clearValidationStyles() {
     const fields = ["firstName", "lastName", "email"];
     fields.forEach(fieldId => {
