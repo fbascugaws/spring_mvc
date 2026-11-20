@@ -116,7 +116,7 @@ async function initializeStudentFormById(id) {
     }
 }
 
-
+// update a student
 async function updateStudent(id, studentData) {
     try {
         const response = await fetch(`${API_URL}/${id}`, {
@@ -135,5 +135,27 @@ async function updateStudent(id, studentData) {
 
     } catch (error) {
         console.error("Error updating student: ", error);        
+    }
+}
+
+// delete a student
+async function deleteStudent(id) {
+    if (confirm("Are you sure you want to delete this student?")) {
+        try {
+            const response = await fetch(`${API_URL}/${id}`, {
+                method: "DELETE"
+            });
+
+            if (response.ok) {
+                const message = await response.text();
+                alert(message);
+                getAllStudents();
+            } else {
+                alert("Error deleting student.");
+            }
+
+        } catch (error) {
+            console.error("Error deleting student: ", error);     
+        }
     }
 }
