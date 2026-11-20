@@ -50,3 +50,37 @@ function resetForm() {
     submitBtn.textContent = "Add Student";
     submitBtn.style.backgroundColor = "#28a745";
 }
+
+// display all db data
+async function getAllStudents() {
+    try {
+        const response = await fetch(API_URL);
+        if (!response.ok) throw new Error("Network response was not ok");
+
+        const students = await response.json();
+        const tableBody = document.getElementById("studentTableBody");
+        tableBody.innerHTML = "";
+
+        students.forEach(student => {
+            const row = `
+                <tr>
+                    <td>${student.id}</d>
+                    <td>${student.firstName}</d>
+                    <td>${student.lastName}</d>
+                    <td>${student.email}</d>
+                    <td>
+                        <button class="btn-edit" onclick="initializesStudentFormById(${student.id})">Edit</button>
+                        <button class="btn-delete" onclick="deleteStudent(${student.id})">Delete</button>
+                    </d>
+                </tr>
+            `;
+            tableBody.innerHTML += row;
+        });
+    } catch (error) {
+        console.error("Error fetching students: ", error);
+        alert("Failed to fetch students. Is your Spring Boot backend running?");        
+    }
+}
+
+// event listener to load data from springboot
+document.addEventListener("DOMContentLoaded", getAllStudents);
